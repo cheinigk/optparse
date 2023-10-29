@@ -1,6 +1,11 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(optparse VERSION 0.0.1 LANGUAGES CXX)
+project(
+  optparse
+  VERSION 0.0.1
+  DESCRIPTION "A CLI option parser library modelled after Haskell's library optparse-applicative."
+  LANGUAGES CXX
+  )
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
@@ -25,3 +30,20 @@ install(DIRECTORY include/${CMAKE_PROJECT_NAME}
 
 enable_testing()
 add_subdirectory(test)
+
+option(BUILD_DOCUMENTATION "Whether to build the documentation.")
+if(${BUILD_DOCUMENTATION})
+  find_package(Doxygen REQUIRED OPTIONAL_COMPONENTS dot)
+  set(DOXYGEN_OUTPUT_DIRECTORY ./doxygen)
+  set(DOXYGEN_USE_MDFILE_AS_MAINPAGE ./README.md)
+  set(DOXYGEN_EXAMPLE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/test)
+  doxygen_add_docs(
+    doxygen
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/doc
+    ${CMAKE_CURRENT_SOURCE_DIR}/README.md
+    ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.md
+    COMMENT "Generate html pages"
+    )
+endif()
